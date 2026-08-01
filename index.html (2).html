@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<title>We Are Friends?</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Caveat:wght@600;700&display=swap');
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Quicksand', sans-serif;
+    background: linear-gradient(135deg, #FFE8F0 0%, #FDF3E7 50%, #E9F5EC 100%);
+    padding: 24px;
+  }
+
+  .card {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    background: #FFFDFB;
+    border-radius: 32px;
+    padding: 40px 30px 34px;
+    box-shadow: 0 20px 50px rgba(255, 150, 180, 0.25), 0 2px 10px rgba(0,0,0,0.04);
+    text-align: center;
+    overflow: hidden;
+    transition: box-shadow 0.4s ease;
+  }
+
+  .card::before {
+    content: "";
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 160px; height: 160px;
+    background: radial-gradient(circle, #FFD6E4 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .card::after {
+    content: "";
+    position: absolute;
+    bottom: -70px; left: -70px;
+    width: 180px; height: 180px;
+    background: radial-gradient(circle, #D9F0E1 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .title {
+    font-family: 'Caveat', cursive;
+    font-size: 2.6rem;
+    color: #E8628A;
+    margin: 0 0 4px;
+    position: relative;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #B98BA5;
+    margin: 0 0 20px;
+    letter-spacing: 0.3px;
+    position: relative;
+  }
+
+  .name-section {
+    position: relative;
+    display: flex;
+    gap: 8px;
+    margin-bottom: 22px;
+  }
+
+  .name-input {
+    flex: 1;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 11px 16px;
+    border-radius: 999px;
+    border: 1.5px solid #F3D3DE;
+    background: #FFF9FB;
+    color: #7A5C6E;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+  .name-input:focus { border-color: #FF9EBB; }
+  .name-input::placeholder { color: #D9A9BC; }
+
+  .stage { position: relative; min-height: 210px; }
+
+  .question-stage, .result-stage {
+    position: relative;
+    transition: opacity 0.4s ease;
+  }
+
+  .result-stage { display: none; }
+  .result-stage.show { display: block; animation: pop 0.5s cubic-bezier(.26,1.4,.44,1); }
+
+  @keyframes pop {
+    0% { opacity: 0; transform: scale(0.85) translateY(10px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .btn-row {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-top: 8px;
+  }
+
+  button.choice {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    padding: 13px 34px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .yes-btn {
+    background: linear-gradient(135deg, #FF9EBB, #FF7AA2);
+    color: #fff;
+    box-shadow: 0 8px 18px rgba(255, 122, 162, 0.4);
+  }
+  .yes-btn:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 12px 22px rgba(255,122,162,0.5); }
+
+  .no-btn {
+    background: #F1E9F5;
+    color: #9A7FB0;
+    box-shadow: 0 6px 14px rgba(154, 127, 176, 0.2);
+  }
+  .no-btn:hover { transform: translateY(-3px) scale(1.04); }
+
+  .note {
+    font-size: 1rem;
+    color: #7A5C6E;
+    line-height: 1.6;
+    margin: 6px 0 16px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .note.no-note { color: #6E7C8A; }
+
+  .special-line {
+    display: block;
+    margin-top: 10px;
+    font-weight: 700;
+  }
+
+  .green-line { color: #4CA771; }
+  .purple-line { color: #9B6BC7; }
+  .sorry-line { display: block; margin-top: 6px; font-weight: 600; color: #B98BA5; }
+
+  .signature {
+    display: block;
+    margin-top: 14px;
+    font-family: 'Caveat', cursive;
+    font-size: 1.4rem;
+    color: #D68CA6;
+  }
+
+  .result-heading {
+    font-family: 'Caveat', cursive;
+    font-size: 2rem;
+    margin: 4px 0 10px;
+  }
+
+  .result-heading.yes-heading { color: #E8628A; }
+  .result-heading.no-heading { color: #7C93A8; }
+
+  .flower-wrap {
+    margin: 6px auto 4px;
+    width: 130px;
+    height: 130px;
+  }
+
+  .again-btn {
+    margin-top: 14px;
+    background: none;
+    border: none;
+    color: #B98BA5;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.85rem;
+    text-decoration: underline;
+    cursor: pointer;
+    opacity: 0.8;
+  }
+  .again-btn:hover { opacity: 1; }
+
+  .send-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 16px;
+    background: linear-gradient(135deg, #FFC9DA, #FFB0C9);
+    color: #7A3B54;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    border: none;
+    padding: 11px 26px;
+    border-radius: 999px;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 8px 16px rgba(255, 176, 201, 0.4);
+    transition: transform 0.2s ease;
+  }
+  .send-btn:hover { transform: translateY(-2px) scale(1.03); }
+
+  .sway { animation: sway 3.5s ease-in-out infinite; transform-origin: bottom center; }
+  @keyframes sway {
+    0%, 100% { transform: rotate(-3deg); }
+    50% { transform: rotate(3deg); }
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <p class="title">we are friends?</p>
+  <p class="subtitle">ek dost ka pyara sawaal ✨</p>
+
+  <div class="name-section">
+    <input type="text" id="nameInput" class="name-input" placeholder="apna naam likho...">
+  </div>
+
+  <div class="stage">
+    <div class="question-stage" id="questionStage">
+      <div class="btn-row">
+        <button class="choice yes-btn" onclick="showResult('yes')">Yes 💕</button>
+        <button class="choice no-btn" onclick="showResult('no')">No</button>
+      </div>
+    </div>
+
+    <div class="result-stage" id="yesStage">
+      <p class="result-heading yes-heading">Happy Friendship Day! 🌸</p>
+      <div class="flower-wrap sway">
+        <svg viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="65" cy="122" rx="4" ry="4" fill="#7BAE8C"/>
+          <path d="M65 122 C 62 95, 68 70, 65 55" stroke="#7BAE8C" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <path d="M65 90 C 50 85, 45 95, 40 100" stroke="#7BAE8C" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M40 100 C 36 96, 32 98, 30 104 C 36 106, 39 104, 40 100 Z" fill="#8FC59F"/>
+          <path d="M65 75 C 78 70, 82 78, 87 82" stroke="#7BAE8C" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M87 82 C 91 78, 95 80, 97 86 C 91 88, 88 86, 87 82 Z" fill="#8FC59F"/>
+          <g transform="translate(65,42)">
+            <ellipse cx="0" cy="-14" rx="12" ry="16" fill="#FF9DB8"/>
+            <ellipse cx="13" cy="-6" rx="12" ry="16" fill="#FFB2C6" transform="rotate(72)"/>
+            <ellipse cx="8" cy="10" rx="12" ry="16" fill="#FF9DB8" transform="rotate(144)"/>
+            <ellipse cx="-8" cy="10" rx="12" ry="16" fill="#FFB2C6" transform="rotate(216)"/>
+            <ellipse cx="-13" cy="-6" rx="12" ry="16" fill="#FF9DB8" transform="rotate(288)"/>
+            <circle cx="0" cy="0" r="8" fill="#FFD873"/>
+          </g>
+        </svg>
+      </div>
+      <p class="note" id="yesNote"></p>
+<button class="again-btn" onclick="resetCard()">↺ dobara try karo</button>
+    </div>
+
+    <div class="result-stage" id="noStage">
+      <p class="result-heading no-heading">No problem 🤍</p>
+      <div class="flower-wrap sway">
+        <svg viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">
+          <path d="M65 122 C 62 95, 68 65, 63 48" stroke="#8FBF9A" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <path d="M63 90 C 48 86, 44 96, 39 101" stroke="#8FBF9A" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M63 70 C 76 65, 80 74, 85 78" stroke="#8FBF9A" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <g transform="translate(63,38) rotate(-18)">
+            <path d="M0 0 C -18 -6, -20 14, 0 26 C 20 14, 18 -6, 0 0 Z" fill="#FFFDF7" stroke="#EDE6D6" stroke-width="1"/>
+            <path d="M0 26 C -10 10, -8 -2, 0 -4 C 8 -2, 10 10, 0 26 Z" fill="#FFF7E3"/>
+          </g>
+          <g transform="translate(65,30)">
+            <path d="M0 0 C -16 -5, -18 13, 0 24 C 18 13, 16 -5, 0 0 Z" fill="#FFFEFB" stroke="#EDE6D6" stroke-width="1"/>
+            <path d="M0 24 C -9 9, -7 -2, 0 -3 C 7 -2, 9 9, 0 24 Z" fill="#FFF9E8"/>
+          </g>
+          <g transform="translate(67,38) rotate(18)">
+            <path d="M0 0 C -18 -6, -20 14, 0 26 C 20 14, 18 -6, 0 0 Z" fill="#FFFDF7" stroke="#EDE6D6" stroke-width="1"/>
+            <path d="M0 26 C -10 10, -8 -2, 0 -4 C 8 -2, 10 10, 0 26 Z" fill="#FFF7E3"/>
+          </g>
+          <circle cx="65" cy="24" r="3" fill="#F5C24C"/>
+        </svg>
+      </div>
+      <p class="note no-note" id="noNote"></p>
+<button class="again-btn" onclick="resetCard()">↺ dobara try karo</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function buildSpecialLines(lower) {
+  var extra = "";
+  if (lower === 'dimple') {
+    extra += '<span class="special-line green-line">You are my green person 💚🍃</span>';
+  } else if (lower === 'shahid') {
+    extra += '<span class="special-line purple-line">You are my purple person 💜</span>';
+    extra += '<span class="sorry-line">Sorry agar kabhi tumhe hurt kiya ho 🥺🤍 🌷</span>';
+  }
+  return extra;
+}
+
+
+function buildPlainSpecialLines(lower) {
+  var extra = "";
+  if (lower === 'dimple') {
+    extra += "\nYou are my green person 💚🍃";
+  } else if (lower === 'shahid') {
+    extra += "\nYou are my purple person 💜";
+    extra += "\nSorry agar kabhi tumhe hurt kiya ho 🥺🤍 dil se sorry, tum meri favorite ho 🌷";
+  }
+  return extra;
+}
+
+
+function showResult(choice) {
+  var rawName = document.getElementById('nameInput').value.trim();
+  var lower = rawName.toLowerCase();
+  document.getElementById('questionStage').style.display = 'none';
+
+  if (choice === 'yes') {
+    var yesText = "Tumhare jaisa dost milna sach mein sabse pyari baat hai 🌷<br>Happy Friendship Day, hamesha aise hi saath rehna! 💖";
+    var yesPlain = "Tumhare jaisa dost milna sach mein sabse pyari baat hai 🌷\nHappy Friendship Day, hamesha aise hi saath rehna! 💖";
+    yesText += buildSpecialLines(lower);
+    yesPlain += buildPlainSpecialLines(lower);
+    if (rawName) {
+      yesText += '<span class="signature">— ' + rawName + '</span>';
+      yesPlain += "\n\n— " + rawName;
+    }
+    document.getElementById('yesNote').innerHTML = yesText;
+    document.getElementById('yesStage').classList.add('show');
+  } else {
+    var noText = "Koi baat nahi 🤍 kabhi kabhi thoda time lagta hai,<br>par ye lily tumhare liye hai — care aur respect ke sath 🕊️";
+    var noPlain = "Koi baat nahi 🤍 kabhi kabhi thoda time lagta hai,\npar ye lily tumhare liye hai — care aur respect ke sath 🕊️";
+    noText += buildSpecialLines(lower);
+    noPlain += buildPlainSpecialLines(lower);
+    if (rawName) {
+      noText += '<span class="signature">— ' + rawName + '</span>';
+      noPlain += "\n\n— " + rawName;
+    }
+    document.getElementById('noNote').innerHTML = noText;
+    document.getElementById('noStage').classList.add('show');
+  }
+}
+
+function resetCard() {
+  document.getElementById('yesStage').classList.remove('show');
+  document.getElementById('noStage').classList.remove('show');
+  document.getElementById('yesNote').innerHTML = '';
+  document.getElementById('noNote').innerHTML = '';
+  document.getElementById('questionStage').style.display = 'block';
+}
+</script>
+
+</body>
+</html>
